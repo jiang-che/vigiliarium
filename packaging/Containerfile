@@ -1,0 +1,27 @@
+# 单一二进制构建镜像
+#
+# 基于 Debian 12 (bookworm, glibc 2.36) 构建，以获得跨发行版兼容性：
+# glibc 只向后兼容——在旧 glibc 上构建，可在更新的 glibc 上运行。
+# 说明：Debian 11 (bullseye) 的 security 仓库已变动、apt 无法稳定安装，
+# 故采用 bookworm；目标发行版当前版本（Debian 12+ / Ubuntu 23.04+ /
+# Fedora 38+ / Mint 22+ / Arch rolling）glibc 均 >= 2.36。
+#
+# 需要：gcc（编译 Nuitka 生成的 C）、patchelf（处理可执行文件依赖）。
+FROM python:3.11-slim-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        gcc \
+        g++ \
+        patchelf \
+        ccache \
+        libncursesw6 \
+    && rm -rf /var/lib/apt/lists/*
+
+# 固定 Nuitka 版本以保证构建可复现（仅构建期依赖，不进入运行时）。
+# [onefile] extra 会安装 zstandard，使 onefile 产物可压缩。
+RUN python3 -m pip install --no-cache-dir "nuitka[onefile]==4.2.2"
+
+WORKDIR /src

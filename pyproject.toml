@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vigiliarium"
+version = "0.1.0"
+description = "面向学者的极简项目推进 TUI 工具：纯文本 Markdown，零运行时依赖"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+keywords = ["tui", "productivity", "research", "markdown", "plaintext"]
+classifiers = [
+    "Environment :: Console :: Curses",
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business :: Scheduling",
+]
+dependencies = []
+
+[project.scripts]
+vigi = "vigi.cli:main"
+
+[tool.setuptools]
+packages = ["vigi"]
+
+[tool.setuptools.package-data]
+vigi = ["py.typed"]
